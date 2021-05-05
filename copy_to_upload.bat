@@ -1,0 +1,1 @@
+@copy dist\Submarine* E:\FF14\js /a
