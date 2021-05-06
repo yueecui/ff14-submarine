@@ -1,10 +1,13 @@
 <template>
   <Waypoint />
   <Statistics />
+  <SubmarineSet />
 
   <div class="ff14-float-layers" v-if="layer > 0">
+    <FloatLayerSetFinder v-if="layer === 2" />
     <FloatLayerSetSpeed v-if="layer === 3" />
     <FloatLayerAddWaypoint v-if="layer === 4" />
+    <FloatLayerAbout v-if="layer === 5" />
     <div class="float-layer-bg"></div>
   </div>
 </template>
@@ -16,8 +19,12 @@ import { mapState, mapGetters } from 'vuex';
 
 import Waypoint from './components/Waypoint.vue';
 import Statistics from './components/Statistics.vue';
+import SubmarineSet from './components/SubmarineSet.vue';
+
+import FloatLayerSetFinder from './components/FloatLayerSetFinder.vue';
 import FloatLayerSetSpeed from './components/FloatLayerSetSpeed.vue';
 import FloatLayerAddWaypoint from './components/FloatLayerAddWaypoint.vue';
+import FloatLayerAbout from './components/FloatLayerAbout.vue';
 
 import { findBestRoute } from './module/findBestRoute'
 
@@ -25,8 +32,11 @@ import { findBestRoute } from './module/findBestRoute'
   components: {
     Waypoint,
     Statistics,
+    SubmarineSet,
+    FloatLayerSetFinder,
     FloatLayerSetSpeed,
     FloatLayerAddWaypoint,
+    FloatLayerAbout,
   },
   computed: {
     ...mapGetters([

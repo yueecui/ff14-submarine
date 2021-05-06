@@ -16,8 +16,14 @@
       <tr v-if="sets.length===0">
         <td colspan="10" style="text-align: left;">请添加或搜索潜水艇配置</td>
       </tr>
-      <tr v-for="(set, i) in sets_data" :key="i" class="submarine-set" @mousedown="layerModSet(i)">
-        <td style="text-align:left;"><div><span class="submarine-name">{{set.n}}</span><br><span class="submarine-cname">{{set.c[0]}} {{set.c[1]}} {{set.c[2]}} {{set.c[3]}}</div></td>
+      <tr v-for="(set, i) in sets_data" :key="i" class="submarine-set" @mousedown="layerModSet($event, i)">
+        <td style="text-align:left;">
+          <div>
+            <span class="submarine-name">{{set.n}}</span>
+            <br>
+            <span class="submarine-cname">{{set.c[0]}} {{set.c[1]}} {{set.c[2]}} {{set.c[3]}}</span>
+          </div>
+        </td>
         <td v-bind:class="{ ['r'+set.ms]: routeInfo.time > 0 }">{{set.st[1]}}</td>
         <td v-bind:class="{ ['r'+set.mr]: routeInfo.time > 0 }">{{set.st[2]}}</td>
         <td>{{set.st[3]}}</td>
@@ -35,72 +41,72 @@
       </tr>
     </table>
   </div>
+  <div class="ff14-btn-group" style="margin-top:1em;">
+    <div class="ff14-btn" @mousedown="layerAddSet">添加</div>
+    <div class="ff14-btn" @mousedown="layerFindSet">搜索</div>
+    <div class="ff14-btn" style="float:right;" @mousedown="layerAbout">关于</div>
+  </div>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
-import { mapState, mapGetters } from 'vuex';
-import ItemLink from './ItemLink.vue';
-import { getRouteTimeCostText, getRouteRealTimeText } from '../module/routeTimeText';
-
+import { mapState } from 'vuex';
+import { calcSetStatus } from '../module/calcSetStatus';
 import { routeInfo } from '../types'
 
 @Options({
-  components: {
-    ItemLink,
-  },
   computed: {
-    ...mapGetters([
-      'currentWarpoints',
-    ]),
     ...mapState([
-      'selected',
-      'speed',
       'sets',
-      'maxRankBonus',
-      'startRealTime',
       'routeInfo',
-      'itemDB',
     ])
   } 
 })
 export default class SubmarineSet extends Vue {
-  // private selected!: Array<number>;
-  // private speed!: number;
   private sets!: Array<Array<number>>;
-  private maxRankBonus!: Array<number>;
-  // private startRealTime!: number;
-  // private routeInfo!: routeInfo;
-  // private itemDB!: Record<number, Record<string, any>>;
-  
-  // private currentWarpoints!: Record<number, Record<string, any>>;
+  private routeInfo!: routeInfo;
 
   get sets_data(){
     var sets_data = [];
     for (var i=0;i<this.sets.length;i++){
       var set = this.sets[i];
-      sets_data.push(this.calcStatus(set, maxRankBonus));
+      sets_data.push(calcSetStatus(set, this.$store));
     }
     return sets_data;
   }
 
-  layerAddWP(event: MouseEvent) {
+  layerModSet(event: MouseEvent, index: number) {
     if (event.button == 0){
-      this.$store.commit('setLayer', 4);
+      this.$store.commit('setLayer', 1);
+      this.$store.commit('setEditorParams', {
+        index: index,
+        set: this.sets[index].slice()
+      });
       event.preventDefault();
     }
   }
 
-  layerSetSpeed(event: MouseEvent){
+  layerAddSet(event: MouseEvent) {
     if (event.button == 0){
-      this.$store.commit('setLayer', 3);
+      this.$store.commit('setLayer', 1);
+      this.$store.commit('setEditorParams', {
+        index: -1,
+        set: [-1, -1, -1, -1, '']
+      });
       event.preventDefault();
     }
   }
 
-  toggleWP(event: MouseEvent, point_id: number){
+  layerFindSet(event: MouseEvent){
     if (event.button == 0){
-      this.$store.commit('toggleWaypoint', point_id);
+      this.$store.commit('setLayer', 2);
+      event.preventDefault();
+    }
+  }
+
+  layerAbout(event: MouseEvent){
+    if (event.button == 0){
+      this.$store.commit('setLayer', 5);
       event.preventDefault();
     }
   }

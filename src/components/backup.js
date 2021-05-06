@@ -729,14 +729,7 @@
             el: '#submarine',
             data: {
 
-                // 编辑器用临时变量
-                editor_index: -1,  // 当前编辑的序号  -1为新增
-                editor_set: [-1, -1, -1, -1, ''],  // 编辑中的组合
-                // 搜索器用变量
-                max_count: MAX_FILTER_COUNT,
-                all_sets: [], // 全配置
-                set_filter: [0, 0, 0, 0, 0, 0], // 搜索用过滤器
-                filter_sort: [-1, -1],  // 第一个参数是用哪个属性排序，第二个参数是正序还是逆序
+               
             },
             computed: {
                 // 所有船配置的数据
@@ -744,42 +737,7 @@
                 // 编辑中的组合数据
                 editor_temp_set: function(){ return this.calcStatus(this.editor_set) },
                 // 当前配置下有效的项目
-                valid_sets: function(){
-                    var valid_sets = this.all_sets.filter(function(set){
-                        if (!set.v) {return false;}
-                        for (var i=0;i<this.set_filter.length;i++){
-                            if (this.set_filter[i] > 0 && set.st[i] < this.set_filter[i]){
-                                return false;
-                            }
-                        }
-                        return true;
-                    }, this);
-                    if (this.filter_sort[0] > -1){
-                        var filter_sort = this.filter_sort;
-                        valid_sets = valid_sets.sort(function(a, b){
-                            if (filter_sort[1] === 1){
-                                return b.st[filter_sort[0]] - a.st[filter_sort[0]];
-                            }else{
-                                return a.st[filter_sort[0]] - b.st[filter_sort[0]];
-                            }
-                        });
-                    }
-                    return valid_sets;
-                }
-            },
-            watch:{
 
-                layer: function(){
-
-                }
-            },
-            mounted: function(){
-                $('.ff14-loading-block').hide();
-                $(this.$el).show();
-
-                this.startTimer();
-
-                console.log('部队潜水艇工具 已加载 版本:' + VERSION);
             },
             methods: {
                 // 事件函数
@@ -791,16 +749,7 @@
                         this.editor_set.splice(slot, 1, rank);
                     }
                 },
-                layerAddSet: function(){
-                    this.editor_index = -1;
-                    this.editor_set = [-1, -1, -1, -1, ''];
-                    this.layer = 1;
-                },
-                layerModSet: function(index){
-                    this.editor_index = index;
-                    this.editor_set = this.sets[index].slice();
-                    this.layer = 1;
-                }, 
+   
                 layerFindSet: function(){
                     this.generateAllSets();
                     this.set_filter = [0, 0, 0, 0, 0, 0];
@@ -808,74 +757,19 @@
                     this.layer = 2;
                 },
 
-                
-                layerAbout: function(){
-                    this.layer = 5;
-                },
                 btnSaveSet: function(){
                     if (this.editor_temp_set.v){
                         this.addSet(this.editor_temp_set, this.editor_index);
                         this.btnCloseLayer();
                     }                
                 },
-                btnCloseLayer: function(){this.layer = 0;},
+
                 btnDeleteSet: function(){
                     this.sets.splice(this.editor_index, 1);
                     this.btnCloseLayer();
                 },
-                addSet: function(setStatus, index){
-                    if (index === undefined) { index = -1; }
-                    var set = setStatus.set;
-                    if (setStatus.v){
-                        if (!set[4] || set[4] == ''){
-                            set[4] = '未命名';
-                        }
-                        if (index === -1){
-                            this.sets.push(set.slice());
-                        }else{
-                            this.sets.splice(index, 1, set.slice());
-                        }
-                    }
-                },
-                checkSet: function(c_set){  // 检查配置是否已经有存在的
-                    for (var i=0;i<this.sets.length;i++){
-                        var set = this.sets[i];
-                        if (c_set.set[0] == set[0] &&
-                            c_set.set[1] == set[1] &&
-                            c_set.set[2] == set[2] &&
-                            c_set.set[3] == set[3]){
-                                return true;
-                            }
-                    }
-                    return false;
-                },
-                checkAndAddSet: function(set){
-                    if (!this.checkSet(set)){
-                        this.addSet(set);
-                    }else{
-                        console.log('已经存在');
-                    }
-                },
+  
                 
-                sortByAttr: function(attr_index){
-                    if (this.filter_sort.length < 2) {this.filter_sort = [-1, -1];}
-                    if (this.filter_sort[0] !== attr_index){
-                        this.filter_sort = [attr_index, 1];
-                    }else{
-                        this.filter_sort.splice(1, 1, this.filter_sort[1] * -1);
-                    }
-                },
-                sortTitleColor: function(attr_index){
-                    if (this.filter_sort[0] === attr_index){
-                        if (this.filter_sort[1] === 1){
-                            return 'r2';
-                        }else{
-                            return 'r0';
-                        }
-                    }else{
-                        return '';
-                    }
-                },
 
 
                 // 内部调用函数
@@ -886,44 +780,7 @@
 
     
                 
-                // 生成全配置表
-                generateAllSets: function(){
-                    if (this.all_sets.length === 0){
-                        for (var c1=0;c1<this.components.length;c1++){
-                            for (var c2=0;c2<this.components.length;c2++){
-                                for (var c3=0;c3<this.components.length;c3++){
-                                    for (var c4=0;c4<this.components.length;c4++){
-                                        this.all_sets.push(this.calcStatus([c1, c2, c3, c4]));
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                // 读取/保存配置
-                // 更新LocalStorage数据
-                saveLocalData: function(){
-                    var ls_data = {
-                        map: this.map,
-                        drop_category: this.drop_category,
-                        selected: this.selected,
-                        speed: this.speed,
-                        sets: this.sets,
-                    }
-                    localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(ls_data));
-                },
-    
-                // 获取LocalStorage数据
-                loadLocalData: function(){
-                    var ls_data = JSON.parse(localStorage.getItem(LOCALSTORAGE_KEY));
-                    if (!ls_data) { ls_data = {}; }
-                    this.map = ls_data.map ? ls_data.map : 3;
-                    this.drop_category = ls_data.drop_category ? ls_data.drop_category : 1;
-                    this.selected = ls_data.selected ? ls_data.selected : [];
-                    this.speed = ls_data.speed ? ls_data.speed : 100;
-                    this.sets = ls_data.sets ? ls_data.sets : [];
-                },
-    
+         
 
             },
     

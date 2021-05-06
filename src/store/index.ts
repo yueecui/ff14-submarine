@@ -2,6 +2,7 @@ import { createStore } from 'vuex'
 
 import { luaTableToArray } from '../module/util/luaTableToArray'
 import { preprocessComponents, preprocessWaypoints } from '../module/dataPreprocess'
+import { calcSetBaseStatus } from '../module/calcSetStatus'
 
 import { routeInfo } from '../types'
 
@@ -17,7 +18,7 @@ export default createStore({
     // 从lua推出的数据中获取的内容
     version: 0,
     dataSources: [] as Array<Record<string, any>>,
-    maxFilterCount: 300,
+    maxFilterCount: 300,  // 搜索时最大过滤器数量，会读取配置，不要太大影响性能
 
     components: [] as Array<Record<string, any>>,  // 船体零件
     maps: {} as Record<number, any>, // 海图名称
@@ -46,6 +47,14 @@ export default createStore({
         max_favor: 0, // 最大需要的恩惠 mf
     } as routeInfo,
     startRealTime: Date.now(),  // 用于计算出发时间的现实时间基数，每秒刷新5次
+
+    // 编辑器用临时变量
+    editor_index: -1,  // 当前编辑的序号  -1为新增
+    editor_set: [-1, -1, -1, -1, ''],  // 编辑中的组合
+    // 搜索器用变量
+    all_sets: [] as Array<Record<string, any>>, // 全配置
+    set_filter: [0, 0, 0, 0, 0, 0], // 搜索用过滤器
+    filter_sort: [-1, -1],  // 第一个参数是用哪个属性排序，第二个参数是正序还是逆序
   },
   getters: {
     currentWarpoints: (state): Record<number, Record<string, any>> => {
@@ -130,6 +139,41 @@ export default createStore({
     },
     setSpeed: (state, speed) => {
       state.speed = speed
+    },
+    setEditorParams: (state, payload) => {
+      state.editor_index = payload.index;
+      state.editor_set = payload.set;
+    },
+    // 初始化所有set组合，首次打开查找窗口时初始化
+    initAllSets: (state) => {
+      if (state.all_sets.length == 0){
+        if (state.all_sets.length === 0){
+          for (let c1=0;c1<state.components.length;c1++){
+            for (let c2=0;c2<state.components.length;c2++){
+              for (let c3=0;c3<state.components.length;c3++){
+                for (let c4=0;c4<state.components.length;c4++){
+                  state.all_sets.push(calcSetBaseStatus([c1, c2, c3, c4], state.maxRankBonus, state.components));
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    // 添加套装
+    addSet: (state, payload) => {
+      const { setStatus, index } = payload;
+      const set = setStatus.set;
+      if (setStatus.v){
+        if (!set[4] || set[4] == ''){
+          set[4] = '未命名';
+        }
+        if (index === -1){
+          state.sets.push(set.slice());
+        }else{
+          state.sets.splice(index, 1, set.slice());
+        }
+      }
     },
   },
   actions: {
