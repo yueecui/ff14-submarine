@@ -78,10 +78,7 @@ export default class SubmarineSet extends Vue {
   layerModSet(event: MouseEvent, index: number) {
     if (event.button == 0){
       this.$store.commit('setLayer', 1);
-      this.$store.commit('setEditorParams', {
-        index: index,
-        set: this.sets[index].slice()
-      });
+      this.$store.commit('setEditorIndex', index);
       event.preventDefault();
     }
   }
@@ -89,10 +86,7 @@ export default class SubmarineSet extends Vue {
   layerAddSet(event: MouseEvent) {
     if (event.button == 0){
       this.$store.commit('setLayer', 1);
-      this.$store.commit('setEditorParams', {
-        index: -1,
-        set: [-1, -1, -1, -1, '']
-      });
+      this.$store.commit('setEditorIndex', -1);
       event.preventDefault();
     }
   }

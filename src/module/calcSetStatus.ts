@@ -12,6 +12,8 @@ export function calcSetStatus(set: Array<number|string>, store: any){
   const temp_status = calcSetBaseStatus(set, bonus, components);
   temp_status.t = getRouteTimeCostText(routeInfo.time, temp_status.st[3]);
 
+  const status = temp_status.st;
+
   // 循环航点判断
   for (let i=0;i<routeInfo.routeOrder.length;i++){
     const wp_id = routeInfo.routeOrder[i];

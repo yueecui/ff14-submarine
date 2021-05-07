@@ -4,6 +4,7 @@
   <SubmarineSet />
 
   <div class="ff14-float-layers" v-if="layer > 0">
+    <FloatLayerSetEditor v-if="layer === 1" />
     <FloatLayerSetFinder v-if="layer === 2" />
     <FloatLayerSetSpeed v-if="layer === 3" />
     <FloatLayerAddWaypoint v-if="layer === 4" />
@@ -21,6 +22,7 @@ import Waypoint from './components/Waypoint.vue';
 import Statistics from './components/Statistics.vue';
 import SubmarineSet from './components/SubmarineSet.vue';
 
+import FloatLayerSetEditor from './components/FloatLayerSetEditor.vue';
 import FloatLayerSetFinder from './components/FloatLayerSetFinder.vue';
 import FloatLayerSetSpeed from './components/FloatLayerSetSpeed.vue';
 import FloatLayerAddWaypoint from './components/FloatLayerAddWaypoint.vue';
@@ -33,6 +35,7 @@ import { findBestRoute } from './module/findBestRoute'
     Waypoint,
     Statistics,
     SubmarineSet,
+    FloatLayerSetEditor,
     FloatLayerSetFinder,
     FloatLayerSetSpeed,
     FloatLayerAddWaypoint,

@@ -50,11 +50,8 @@ export default createStore({
 
     // 编辑器用临时变量
     editor_index: -1,  // 当前编辑的序号  -1为新增
-    editor_set: [-1, -1, -1, -1, ''],  // 编辑中的组合
     // 搜索器用变量
-    all_sets: [] as Array<Record<string, any>>, // 全配置
-    set_filter: [0, 0, 0, 0, 0, 0], // 搜索用过滤器
-    filter_sort: [-1, -1],  // 第一个参数是用哪个属性排序，第二个参数是正序还是逆序
+    all_sets: [] as Array<Record<string, any>>, // 全配置，初次使用时再初始化
   },
   getters: {
     currentWarpoints: (state): Record<number, Record<string, any>> => {
@@ -140,9 +137,8 @@ export default createStore({
     setSpeed: (state, speed) => {
       state.speed = speed
     },
-    setEditorParams: (state, payload) => {
-      state.editor_index = payload.index;
-      state.editor_set = payload.set;
+    setEditorIndex: (state, index) => {
+      state.editor_index = index;
     },
     // 初始化所有set组合，首次打开查找窗口时初始化
     initAllSets: (state) => {
@@ -175,6 +171,12 @@ export default createStore({
         }
       }
     },
+    // 删除套装
+    deleteSet: (state, index) => {
+      if (state.sets.length >= index){
+        state.sets.splice(index, 1);
+      }
+    }
   },
   actions: {
   },
