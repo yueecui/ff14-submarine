@@ -73,8 +73,8 @@ export default class SubmarineTool extends Vue {
         this.$store.commit('updateStartRealTime', Date.now());
     }, 5000);
     this.updateRouteInfo();
+    // eslint-disable-next-line
     console.log('部队潜水艇工具 已加载 版本:' + this.version);
-    // console.log(this.$store.state.waypointData)
   }
 
   @Watch('layer')

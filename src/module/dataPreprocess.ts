@@ -12,7 +12,7 @@ export function preprocessComponents(all_data: Record<string, any>){
     for (const item_id of component.items){
       const item_info = all_data.item_db[item_id]
       if (item_info == undefined){
-        console.error('物品ID<'+item_id+'>没有数据，请检查！')
+        // console.error('物品ID<'+item_id+'>没有数据，请检查！')
       }else{
         const part = item_info['机体数据'];
         component.s[part['位置']] = [
