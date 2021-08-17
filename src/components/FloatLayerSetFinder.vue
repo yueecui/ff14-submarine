@@ -34,14 +34,21 @@
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
+
+import { routeInfo } from '../types'
 
 @Options({
   computed: {
+    ...mapGetters([
+      'currentWarpoints',
+    ]),    
     ...mapState([
       'attrName',
       'all_sets',
       'sets',
+      'speed',
+      'routeInfo',
       'maxFilterCount',
     ])
   } 
@@ -51,11 +58,15 @@ export default class FloatLayerSetFinder extends Vue {
   private all_sets!: Array<Record<string, any>>;
   private sets!: Array<Array<number|string>>;
   private maxFilterCount!: number;
+  private speed!: number;
+  private routeInfo!: routeInfo;
+
   private set_filter = [0, 0, 0, 0, 0, 0]; // 搜索用过滤器
   private filter_sort = [-1, -1];  // 第一个参数是用哪个属性排序，第二个参数是正序还是逆序
 
   mounted(){
     this.$store.commit('initAllSets');
+    this.set_filter = [0, this.routeInfo.max_surveillance, this.routeInfo.max_retrieval, this.speed, this.routeInfo.distance, this.routeInfo.max_favor]; // 配置默认值
   }
 
   close(event: MouseEvent) {
