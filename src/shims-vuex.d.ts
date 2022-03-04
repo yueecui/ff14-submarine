@@ -1,4 +1,4 @@
-import { ComponentCustomProperties } from 'vue'
+// import { ComponentCustomProperties } from 'vue'
 // import { Store } from 'vuex'
 import { store } from './store'
 

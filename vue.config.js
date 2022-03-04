@@ -7,7 +7,7 @@ module.exports = {
           target: 'https://huiji-public.huijistatic.com/',
           changeOrigin: true,
           secure: false,
-          bypass: (req, res) => {
+          bypass: (req) => {
             req.headers.referer = 'https://ff14.huijiwiki.com/';
           },
         },
