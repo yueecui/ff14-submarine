@@ -6,7 +6,7 @@
         <tr><th style="width:10em;">航点</th><th style="width:10em;">航行时间</th><th style="width:10em;">回归时间</th></tr>
         <tr v-for="wp in currentWarpoints" @mousedown="toggleWP($event, wp.id)" class="hover-block" :class="{selected:selected.includes(wp.id)}" :key="wp.id">
           <td>{{ wp.code + " " + wp.name}}</td>
-          <td class="selected" style="text-align: center;" colspan="2" v-if="selected.includes(wp.id)">已添加</td>
+          <td class="selected" style="text-align: center;" :colspan="2" v-if="selected.includes(wp.id)">已添加</td>
           <template v-else>
             <td>{{getSimRouteTimeCostText(wp.id)}}</td>
             <td>{{getSimRouteRealTimeText(wp.id)}}</td>
@@ -41,12 +41,12 @@ import { findBestRoute } from '../module/findBestRoute'
   } 
 })
 export default class FloatLayerAddWaypoint extends Vue {
-  private selected!: Array<number>;
-  private speed!: number;
-  private startRealTime!: number;
+  selected!: Array<number>;
+  speed!: number;
+  startRealTime!: number;
   
-  private currentWarpoints!: Record<number, Record<string, any>>;
-  private startPoint!: Record<string, any>;
+  currentWarpoints!: Record<number, Record<string, any>>;
+  startPoint!: Record<string, any>;
 
   toggleWP(event: MouseEvent, point_id: number){
     if (event.button == 0){

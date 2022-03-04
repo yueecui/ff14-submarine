@@ -56,16 +56,17 @@ import { findBestRoute } from './module/findBestRoute'
     ])
   } 
 })
-export default class SubmarineTool extends Vue {
-  private version!: number;
-  private map!: number;
-  private selected!: Array<number>;
-  private speed!: number;
-  private sets!: Array<Array<number>>;
-  private layer!: number;
 
-  private currentWarpoints!: Record<number, Record<string, any>>;
-  private startPoint!: Record<string, any>;
+export default class SubmarineTool extends Vue {
+  version!: number;
+  map!: number;
+  selected!: Array<number>;
+  speed!: number;
+  sets!: Array<Array<number>>;
+  layer!: number;
+
+  currentWarpoints!: Record<number, Record<string, any>>;
+  startPoint!: Record<string, any>;
 
   mounted(){
     // 设置定时器

@@ -14,7 +14,7 @@
         <th style="width: 10%;">额外<br>探索</th>
       </tr>
       <tr v-if="sets.length===0">
-        <td colspan="10" style="text-align: left;">请添加或搜索潜水艇配置</td>
+        <td :colspan="10" style="text-align: left;">请添加或搜索潜水艇配置</td>
       </tr>
       <tr v-for="(set, i) in sets_data" :key="i" class="submarine-set" @mousedown="layerModSet($event, i)">
         <td style="text-align:left;">
@@ -63,8 +63,8 @@ import { routeInfo } from '../types'
   } 
 })
 export default class SubmarineSet extends Vue {
-  private sets!: Array<Array<number>>;
-  private routeInfo!: routeInfo;
+  sets!: Array<Array<number>>;
+  routeInfo!: routeInfo;
 
   get sets_data(){
     var sets_data = [];

@@ -1,11 +1,11 @@
 <template>
   <div class="statistics-block">
     <table class="statistics-table wikitable">
-      <tr><th colspan="7">最短路线情报</th></tr>
+      <tr><th :colspan="7">最短路线情报</th></tr>
       <template v-if="selected.length > 0">
         <tr>
           <th>目的地顺序</th>
-          <td colspan="4">
+          <td :colspan="4">
             <ul class="hor-waypoints-list">
               <li v-for="wp_id in routeInfo.routeOrder" :key="wp_id" @mousedown="toggleWP($event, wp_id)">
                 <div class="wp selected">{{currentWarpoints[wp_id].code}}</div>
@@ -20,7 +20,7 @@
         </tr>
         <tr>
           <th>航行距离</th>
-          <td colspan="2">{{routeInfo.distance}}</td>
+          <td :colspan="2">{{routeInfo.distance}}</td>
           <th>预览速度</th>
           <td>{{speed}} <i class="fa fa-pencil-square btn-red" aria-hidden="true" @mousedown="layerSetSpeed"></i></td>
           <th>最大收集需求</th>
@@ -28,14 +28,14 @@
         </tr>
         <tr>
           <th>航行时间预览</th>
-          <td colspan="2">{{routeTimeCostText}}</td>
+          <td :colspan="2">{{routeTimeCostText}}</td>
           <th>回归时间</th>
           <td>{{routeRealTimeText}}</td>
           <th>最大恩惠需求</th>
           <td class="r2">{{routeInfo.max_favor}}</td>
         </tr>
         <tr>
-          <th colspan="7">沿途目的地情报</th>
+          <th :colspan="7">沿途目的地情报</th>
         </tr>
         <tr>
           <th style="width: 16%;">目的地</th>
@@ -56,7 +56,7 @@
           <td><div v-for="item_id in currentWarpoints[w].drop.high" :key="'high'+item_id"><ItemLink :item="itemDB[item_id]" /></div></td>
         </tr>
       </template>
-      <tr v-else><td colspan="7">请选择希望探索的目的地</td></tr>
+      <tr v-else><td :colspan="7">请选择希望探索的目的地</td></tr>
     </table>
   </div>
 </template>
@@ -87,13 +87,13 @@ import { routeInfo } from '../types'
   } 
 })
 export default class Statistics extends Vue {
-  private selected!: Array<number>;
-  private speed!: number;
-  private startRealTime!: number;
-  private routeInfo!: routeInfo;
-  private itemDB!: Record<number, Record<string, any>>;
+  selected!: Array<number>;
+  speed!: number;
+  startRealTime!: number;
+  routeInfo!: routeInfo;
+  itemDB!: Record<number, Record<string, any>>;
   
-  private currentWarpoints!: Record<number, Record<string, any>>;
+  currentWarpoints!: Record<number, Record<string, any>>;
 
   get routeTimeCostText(){
     return getRouteTimeCostText(this.routeInfo.time, this.speed);

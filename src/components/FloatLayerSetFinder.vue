@@ -54,15 +54,15 @@ import { routeInfo } from '../types'
   } 
 })
 export default class FloatLayerSetFinder extends Vue {
-  private attrName!: Array<string>;
-  private all_sets!: Array<Record<string, any>>;
-  private sets!: Array<Array<number|string>>;
-  private maxFilterCount!: number;
-  private speed!: number;
-  private routeInfo!: routeInfo;
+  attrName!: Array<string>;
+  all_sets!: Array<Record<string, any>>;
+  sets!: Array<Array<number|string>>;
+  maxFilterCount!: number;
+  speed!: number;
+  routeInfo!: routeInfo;
 
-  private set_filter = [0, 0, 0, 0, 0, 0]; // 搜索用过滤器
-  private filter_sort = [-1, -1];  // 第一个参数是用哪个属性排序，第二个参数是正序还是逆序
+  set_filter = [0, 0, 0, 0, 0, 0]; // 搜索用过滤器
+  filter_sort = [-1, -1];  // 第一个参数是用哪个属性排序，第二个参数是正序还是逆序
 
   mounted(){
     this.$store.commit('initAllSets');

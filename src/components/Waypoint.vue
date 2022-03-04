@@ -10,7 +10,7 @@
     </div>
     <div class="explore-map">
       <table class="wikitable">
-        <tr><th colspan="2">{{map_name}}</th></tr>
+        <tr><th :colspan="2">{{map_name}}</th></tr>
       </table>
       <div class="sea-map" :class="'map'+map">
         <div class="base wp" :style="{left:startPoint.x/3+'px', top:startPoint.y/3+'px'}"></div>
@@ -23,7 +23,7 @@
     </div>
     <div class="explore-drop">
       <table class="drop-map wikitable">
-        <tr><th colspan="2">获得物品</th></tr>
+        <tr><th :colspan="2">获得物品</th></tr>
         <tr v-for="item in rewards" :key="item.ID">
           <td class="drop-item-name" :style="{width: (item_name_length+3)+'em'}"><ItemLink :item="item"></ItemLink></td>
           <td>
@@ -63,10 +63,10 @@ import { getCurrentRewards, generateDropMap } from '../module/Waypoint';
   } 
 })
 export default class Waypoint extends Vue {
-  private map!: number;
-  private selected!: Array<number>;
-  private currentWarpoints!: Record<number, Record<string, any>>;
-  private startPoint!: Record<string, any>;
+  map!: number;
+  selected!: Array<number>;
+  currentWarpoints!: Record<number, Record<string, any>>;
+  startPoint!: Record<string, any>;
 
   get map_name() { return this.$store.state.maps[this.map].cn; }
   get rewards() { return getCurrentRewards(this.$store.state.itemDB, this.currentWarpoints);}

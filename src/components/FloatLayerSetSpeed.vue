@@ -34,9 +34,9 @@ import { routeInfo } from '../types'
   } 
 })
 export default class FloatLayerSetSpeed extends Vue {
-  private speed!: number;
-  private startRealTime!: number;
-  private routeInfo!: routeInfo;
+  speed!: number;
+  startRealTime!: number;
+  routeInfo!: routeInfo;
 
   setSpeed(event: MouseEvent, speed: number){
       if (event.button == 0){

@@ -18,16 +18,16 @@
         <tr v-for="i in 4" :key="i" :class="{ r0: editor_set[i-1] === -1 }">
           <th>{{slotName[i-1]}}</th>
           <template v-if="editor_set[i-1] > -1">
-            <td>{{components[editor_set[i-1]].c}}</td>
-            <td v-for="j in 6" :key="j">{{components[editor_set[i-1]].s[i-1][j-1]}}</td>
+            <td>{{getComponent(editor_set[i-1]).c}}</td>
+            <td v-for="j in 6" :key="j">{{getComponent(editor_set[i-1]).s[i-1][j-1]}}</td>
           </template>
           <template v-else>
             <td>无</td>
             <td v-for="j in 6" :key='j'>0</td>
           </template>
         </tr>
-        <tr><th colspan="2">{{maxRank}}级奖励属性</th><td v-for="(bonus_v, i) in maxRankBonus" :key="i">{{bonus_v}}</td></tr>
-        <tr :class="{ r0:!editorSetStatus.v }"><th colspan="2">总计</th>
+        <tr><th :colspan="2">{{maxRank}}级奖励属性</th><td v-for="(bonus_v, i) in maxRankBonus" :key="i">{{bonus_v}}</td></tr>
+        <tr :class="{ r0:!editorSetStatus.v }"><th :colspan="2">总计</th>
           <td>{{editorSetStatus.st[0]}}</td>
           <td :class="{ ['r'+editorSetStatus.ms]: routeInfo.time > 0 }">{{editorSetStatus.st[1]}}</td>
           <td :class="{ ['r'+editorSetStatus.mr]: routeInfo.time > 0 }">{{editorSetStatus.st[2]}}</td>
@@ -53,7 +53,7 @@
         <tr><th>额外探索</th><td style="text-align:left;"><span v-for="(code, i) in routeInfo.routeCode" :key="code" :class="'r'+editorSetStatus.f[i]">{{code}}</span> / 需要:<span class="r2">{{routeInfo.max_favor}}</span></td></tr>
     </table>
     <div class="ff14-btn-group">
-      <div class="ff14-btn" :class="{disable:!this.editorSetStatus.v}" @mousedown="btnSaveSet">保存</div>
+      <div class="ff14-btn" :class="{disable:!editorSetStatus.v}" @mousedown="btnSaveSet">保存</div>
       <div class="ff14-btn" @mousedown="btnClose">取消</div>
       <div class="ff14-btn" v-if="editor_index > -1" @mousedown="btnDeleteSet">删除</div>                             
     </div>
@@ -85,17 +85,17 @@ import { routeInfo } from '../types'
   } 
 })
 export default class FloatLayerSetEditor extends Vue {
-  private slotName!: Array<string>;
-  private attrName!: Array<string>;
-  private sets!: Array<Array<number|string>>;
-  private components!: Array<Record<string, any>>;
-  private maxRank!: number;
-  private maxRankBonus!: Array<number>;
-  private routeInfo!: routeInfo;
-  private startRealTime!: number;
-  private editor_index!: number;
+  slotName!: Array<string>;
+  attrName!: Array<string>;
+  sets!: Array<Array<number|string>>;
+  components!: Array<Record<string, any>>;
+  maxRank!: number;
+  maxRankBonus!: Array<number>;
+  routeInfo!: routeInfo;
+  startRealTime!: number;
+  editor_index!: number;
 
-  private editor_set = [-1, -1, -1, -1, ''] as Array<number|string>;  // 编辑中的组合
+  editor_set: Array<number|string> = [-1, -1, -1, -1, ''];   // 编辑中的组合
 
   mounted(){
     if (this.editor_index == -1){
@@ -118,6 +118,14 @@ export default class FloatLayerSetEditor extends Vue {
     return getRouteRealTimeText(this.startRealTime, this.routeInfo.time, speed);
   }
 
+  getComponent(id: number|string){
+    if (typeof(id) == 'string'){
+      // 不会发生
+      console.error('id is string');
+      return {}
+    }
+    return this.components[id];
+  }
 
   btnClose(event: MouseEvent) {
     if (event.button > 0){
