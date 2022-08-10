@@ -1,11 +1,17 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-import store from './store'
-import { getAllData } from './module/util/getData'
+import { createApp } from 'vue';
+import App from './App.vue';
+import { setupStore } from './stores';
+import { useSubmarineStoreWithoutSetup } from './stores/submarine';
 
-store.commit('initAllData', getAllData());
-store.commit('loadLocalData');
+// 创建APP实例
+const app = createApp(App);
 
-(window as any).store = store;
+// 加载仓库
+setupStore(app);
 
-createApp(App).use(store).mount('#app-submarine-tool')
+const submarineStore = useSubmarineStoreWithoutSetup();
+submarineStore.loadLocalData();
+submarineStore.initAllData();
+
+// 挂在APP实例在DOM中
+app.mount('#app-submarine-tool');
