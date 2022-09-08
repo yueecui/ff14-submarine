@@ -53,9 +53,12 @@ watch(layer, (newVal) => {
     }
 });
 
+const selected = computed(() => submarineStore.selected);
+
 watch(
-    [map, speed, sets, submarineStore.selected],
+    [map, speed, sets, selected],
     () => {
+        console.log(111);
         updateRouteInfo();
         submarineStore.saveLocalData();
     },
@@ -67,7 +70,7 @@ function updateRouteInfo() {
         return;
     }
     submarineStore.setRouteInfo(
-        findBestRoute(submarineStore.selected, submarineStore.startPoint, submarineStore.currentWarpoints),
+        findBestRoute(selected.value, submarineStore.startPoint, submarineStore.currentWarpoints),
     );
 }
 </script>
